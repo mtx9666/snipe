@@ -1,4 +1,6 @@
-import { useState } from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey, Connection, Transaction } from '@solana/web3.js';
 import type { TokenInfo } from '@solana/spl-token-registry';

@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import type { TokenInfo } from '@solana/spl-token-registry';
 

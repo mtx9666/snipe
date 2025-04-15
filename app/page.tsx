@@ -1,4 +1,6 @@
-import { useState } from "react";
+'use client';
+
+import React, { useState } from "react";
 import { TokenInput } from "../components/TokenInput";
 import { QuotePreview } from "../components/QuotePreview";
 import { SnipeButton } from "../components/SnipeButton";

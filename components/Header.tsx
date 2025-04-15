@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
