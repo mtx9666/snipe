@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { WalletProvider } from "../components/WalletProvider";
+import { WalletConnectButton } from "../components/WalletConnectButton";
+import { ErrorBoundary } from '../components/ErrorBoundary';
+import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,15 +24,28 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="en" className="dark">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Solana Token Sniper</title>
+        <meta name="description" content="Efficiently trade SPL tokens on Solana using Jupiter aggregator" />
+      </head>
+      <body className="bg-zinc-950 min-h-screen">
+        <WalletProvider>
+          <ErrorBoundary>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow pt-16">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </ErrorBoundary>
+        </WalletProvider>
       </body>
     </html>
   );

@@ -1,36 +1,155 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Solana Token Sniper
 
-## Getting Started
+A modern, decentralized application for efficiently trading SPL tokens on the Solana blockchain using Jupiter aggregator.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 🚀 Real-time token sniping with Jupiter aggregation
+- 💰 Best price execution across multiple DEXs
+- 🔒 Secure, client-side only transactions
+- 📊 Live market data and trending tokens
+- 📱 Responsive design for all devices
+- 🔍 Token validation and price impact warnings
+- 📈 Transaction history tracking
+- ⚡ Fast and efficient swaps
+
+## Tech Stack
+
+- Next.js 14 with App Router
+- TypeScript
+- Tailwind CSS
+- Solana Web3.js
+- Jupiter SDK
+- Phantom Wallet Integration
+
+## Prerequisites
+
+- Node.js 18.x or later
+- npm or yarn
+- Phantom Wallet browser extension
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/solana-token-sniper.git
+   cd solana-token-sniper
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Create a `.env.local` file in the root directory:
+   ```env
+   NEXT_PUBLIC_SOLANA_RPC_URL=your_rpc_url
+   NEXT_PUBLIC_JUPITER_API_URL=https://price-api.jup.ag/v4
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Environment Variables
+
+- `NEXT_PUBLIC_SOLANA_RPC_URL`: Your Solana RPC endpoint
+- `NEXT_PUBLIC_JUPITER_API_URL`: Jupiter API endpoint for price data
+
+## Project Structure
+
+```
+solana-sniper/
+├── app/                    # Next.js app directory
+│   ├── layout.tsx         # Root layout with providers
+│   ├── page.tsx           # Home page
+│   └── legal/             # Legal pages
+├── components/            # React components
+│   ├── TokenInput.tsx     # Token input form
+│   ├── QuotePreview.tsx   # Price quote display
+│   ├── SnipeButton.tsx    # Transaction execution
+│   └── ...               # Other components
+├── utils/                 # Utility functions
+│   ├── validation.ts      # Input validation
+│   └── ...               # Other utilities
+├── styles/               # Global styles
+└── public/               # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Security Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Input validation and sanitization
+- Rate limiting
+- Security headers
+- Error boundaries
+- No private key handling
+- Client-side only storage
+- Comprehensive error handling
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Development
 
-## Learn More
+### Running Tests
+```bash
+npm run test
+# or
+yarn test
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Linting
+```bash
+npm run lint
+# or
+yarn lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Building for Production
+```bash
+npm run build
+# or
+yarn build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+1. Build the application:
+   ```bash
+   npm run build
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Deploy to your preferred hosting platform (e.g., Vercel):
+   ```bash
+   vercel deploy
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [Solana](https://solana.com) - Blockchain platform
+- [Jupiter](https://jup.ag) - DEX aggregator
+- [Phantom](https://phantom.app) - Wallet provider
+
+## Support
+
+For support, please open an issue in the GitHub repository or contact the maintainers.
+
+## Disclaimer
+
+Trading cryptocurrencies involves substantial risk. Please read our [legal disclaimer](https://your-app-url.com/legal) before using the application.
