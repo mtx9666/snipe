@@ -16,7 +16,7 @@ interface TokenInputProps {
 }
 
 export function TokenInput({ onChange }: TokenInputProps) {
-  const { publicKey } = useWallet();
+  const { } = useWallet();
   const [tokenAddress, setTokenAddress] = useState('');
   const [solAmount, setSolAmount] = useState('');
   const [slippage, setSlippage] = useState('1');
@@ -61,7 +61,7 @@ export function TokenInput({ onChange }: TokenInputProps) {
 
   // Slippage validation
   const handleSlippage = (value: string) => {
-    let sanitized = value.replace(/[^\d.]/g, '');
+    const sanitized = value.replace(/[^\d.]/g, '');
     let num = parseFloat(sanitized);
     if (isNaN(num) || num < 0.1) num = 0.1;
     if (num > 50) num = 50;

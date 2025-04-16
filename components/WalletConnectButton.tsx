@@ -1,51 +1,43 @@
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useCallback, useState } from 'react';
+import { WalletName } from '@solana/wallet-adapter-base';
+
+interface WalletOption {
+  name: WalletName;
+  icon: string;
+}
 
 export function WalletConnectButton() {
-    const { connected, connecting, publicKey, connect, disconnect, wallet } = useWallet();
-    const [error, setError] = useState<string | null>(null);
+  const { select, wallets, connecting, connected, disconnect } = useWallet();
+  
+  const handleConnect = (walletName: WalletName) => {
+    if (connected) {
+      disconnect();
+    } else {
+      select(walletName);
+    }
+  };
 
-    const handleConnect = useCallback(async () => {
-        setError(null);
-        try {
-            await connect();
-        } catch (err: any) {
-            setError(err?.message || 'Wallet connection failed');
-        }
-    }, [connect]);
-
-    const handleDisconnect = useCallback(async () => {
-        setError(null);
-        try {
-            await disconnect();
-        } catch (err: any) {
-            setError(err?.message || 'Wallet disconnect failed');
-        }
-    }, [disconnect]);
-
-    return (
-        <div className="flex flex-col items-center gap-2">
-            {connected && publicKey ? (
-                <>
-                    <button
-                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                        onClick={handleDisconnect}
-                        aria-label="Disconnect wallet"
-                    >
-                        Disconnect ({publicKey.toBase58().slice(0, 4)}...{publicKey.toBase58().slice(-4)})
-                    </button>
-                </>
-            ) : (
-                <button
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-50"
-                    onClick={handleConnect}
-                    disabled={connecting || !wallet}
-                    aria-label="Connect Phantom Wallet"
-                >
-                    {connecting ? 'Connecting...' : 'Connect Phantom Wallet'}
-                </button>
+  return (
+    <div className="relative inline-block">
+      <div className="flex gap-2">
+        {wallets.map((wallet) => (
+          <button
+            key={wallet.adapter.name}
+            onClick={() => handleConnect(wallet.adapter.name)}
+            className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors ${
+              connected && wallet.adapter.connected
+                ? 'bg-green-600 hover:bg-green-700 text-white'
+                : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-100'
+            }`}
+            disabled={connecting}
+          >
+            {wallet.adapter.icon && (
+              <img src={wallet.adapter.icon} alt={wallet.adapter.name} className="w-5 h-5" />
             )}
-            {error && <span className="text-red-500 text-xs">{error}</span>}
-        </div>
-    );
+            {connected && wallet.adapter.connected ? 'Disconnect' : wallet.adapter.name}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 } 

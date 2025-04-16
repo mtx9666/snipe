@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: 'standalone',
   reactStrictMode: true,
-  swcMinify: true,
   poweredByHeader: false,
   images: {
     domains: ['solscan.io'], // Add any other domains you might be loading images from

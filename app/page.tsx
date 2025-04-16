@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { TokenInput } from "../components/TokenInput";
 import { QuotePreview } from "../components/QuotePreview";
 import { SnipeButton } from "../components/SnipeButton";
@@ -11,16 +11,53 @@ import { WalletSwaps } from "../components/WalletSwaps";
 import type { TokenInfo } from "@solana/spl-token-registry";
 import { useWallet } from '@solana/wallet-adapter-react';
 
+interface TokenInputState {
+  tokenAddress: string;
+  solAmount: string;
+  slippage: string;
+  tokenInfo?: TokenInfo;
+  valid: boolean;
+  error?: string;
+}
+
+interface JupiterQuote {
+  inAmount: string;
+  outAmount: string;
+  priceImpactPct: number;
+  otherAmountThreshold: string;
+  routePlan: Array<{
+    swapInfo: {
+      ammKey: string;
+      label: string;
+      inputMint: string;
+      outputMint: string;
+      inAmount: string;
+      outAmount: string;
+      feeAmount: string;
+      feeMint: string;
+    };
+  }>;
+  contextSlot: number;
+  marketInfos: Array<{
+    id: string;
+    label: string;
+    inputMint: string;
+    outputMint: string;
+    notEnoughLiquidity: boolean;
+    inAmount: string;
+    outAmount: string;
+    priceImpactPct: number;
+    lpFee: {
+      amount: string;
+      mint: string;
+      pct: number;
+    };
+  }>;
+}
+
 export default function Home() {
   const { publicKey } = useWallet();
-  const [tokenInput, setTokenInput] = useState<{
-    tokenAddress: string;
-    solAmount: string;
-    slippage: string;
-    tokenInfo?: TokenInfo;
-    valid: boolean;
-    error?: string;
-  }>({
+  const [tokenInput, setTokenInput] = useState<TokenInputState>({
     tokenAddress: '',
     solAmount: '',
     slippage: '1',
@@ -28,7 +65,11 @@ export default function Home() {
     valid: false,
     error: undefined,
   });
-  const [quote, setQuote] = useState<any>(null);
+  const [quote, setQuote] = useState<JupiterQuote | null>(null);
+
+  const handleQuote = useCallback((newQuote: JupiterQuote | null) => {
+    setQuote(newQuote);
+  }, []);
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col items-center justify-center p-4">
@@ -46,11 +87,14 @@ export default function Home() {
           slippage={tokenInput.slippage}
           tokenInfo={tokenInput.tokenInfo}
           publicKey={publicKey ?? undefined}
-          onQuote={setQuote}
+          onQuote={handleQuote}
         />
         <SnipeButton
-          quote={quote}
+          tokenAddress={tokenInput.tokenAddress}
+          solAmount={tokenInput.solAmount}
+          slippage={tokenInput.slippage}
           tokenInfo={tokenInput.tokenInfo}
+          disabled={!tokenInput.valid || !quote}
         />
       </main>
       <RecentSnipes />

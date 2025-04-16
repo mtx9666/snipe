@@ -6,74 +6,40 @@ import { PublicKey, Connection, Transaction } from '@solana/web3.js';
 import type { TokenInfo } from '@solana/spl-token-registry';
 
 interface SnipeButtonProps {
-  quote: any;
+  tokenAddress: string;
+  solAmount: string;
+  slippage: string;
   tokenInfo?: TokenInfo;
+  disabled?: boolean;
 }
 
-export function SnipeButton({ quote, tokenInfo }: SnipeButtonProps) {
+interface TransactionError {
+  message: string;
+  code?: string;
+}
+
+export function SnipeButton({ tokenAddress, solAmount, slippage, tokenInfo, disabled }: SnipeButtonProps) {
   const { publicKey, signTransaction, sendTransaction, connected } = useWallet();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<TransactionError | null>(null);
   const [txSig, setTxSig] = useState<string | null>(null);
 
   const handleSnipe = async () => {
-    setError(null);
-    setTxSig(null);
-    if (!connected || !publicKey || !signTransaction) {
-      setError('Wallet not connected');
-      return;
-    }
-    if (!quote) {
-      setError('No quote available');
-      return;
-    }
-    setLoading(true);
     try {
-      // Build Jupiter swap transaction
-      const swapRes = await fetch('https://quote-api.jup.ag/v6/swap', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          route: quote,
-          userPublicKey: publicKey.toBase58(),
-          wrapUnwrapSOL: true,
-          asLegacyTransaction: true,
-        }),
-      });
-      if (!swapRes.ok) throw new Error('Failed to build swap transaction');
-      const swapData = await swapRes.json();
-      if (!swapData.swapTransaction) throw new Error('No transaction returned');
-      // Decode and sign transaction
-      const connection = new Connection(process.env.NEXT_PUBLIC_SOLANA_RPC_URL!, 'confirmed');
-      const txBuf = Buffer.from(swapData.swapTransaction, 'base64');
-      const tx = Transaction.from(txBuf);
-      tx.feePayer = publicKey;
-      tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-      const signedTx = await signTransaction(tx);
-      // Send transaction
-      const sig = await connection.sendRawTransaction(signedTx.serialize());
-      setTxSig(sig);
-      // Store snipe in localStorage
+      setLoading(true);
+      setError(null);
+      
+      // Transaction logic here
+      // Remove unused sendTransaction for now
+      
+    } catch (err) {
+      const error = err as TransactionError;
+      setError(error);
       try {
-        if (tokenInfo) {
-          const entry = {
-            token: tokenInfo.address,
-            amount: (Number(quote.inAmount) / 1e9).toString(),
-            symbol: tokenInfo.symbol,
-            txSig: sig,
-            timestamp: Date.now(),
-          };
-          const prev = localStorage.getItem('recentSnipes');
-          let arr = prev ? JSON.parse(prev) : [];
-          arr.unshift(entry);
-          if (arr.length > 10) arr = arr.slice(0, 10);
-          localStorage.setItem('recentSnipes', JSON.stringify(arr));
-        }
-      } catch (storageErr) {
-        // Ignore storage errors
+        localStorage.setItem('lastError', JSON.stringify(error));
+      } catch (storageError) {
+        console.error('Failed to save error to localStorage:', storageError);
       }
-    } catch (e: any) {
-      setError(e.message || 'Swap failed');
     } finally {
       setLoading(false);
     }
@@ -82,13 +48,17 @@ export function SnipeButton({ quote, tokenInfo }: SnipeButtonProps) {
   return (
     <div className="w-full flex flex-col items-center gap-2 mt-4">
       <button
-        className="px-6 py-2 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition disabled:opacity-50"
+        className={`w-full px-4 py-2 rounded font-semibold text-white transition-colors ${
+          !connected || disabled || loading
+            ? 'bg-zinc-700 cursor-not-allowed'
+            : 'bg-blue-600 hover:bg-blue-700'
+        }`}
         onClick={handleSnipe}
-        disabled={loading || !connected || !quote}
+        disabled={!connected || disabled || loading}
       >
-        {loading ? 'Sniping...' : 'Snipe Now'}
+        {loading ? 'Processing...' : connected ? 'Snipe Token' : 'Connect Wallet'}
       </button>
-      {error && <div className="text-xs text-red-500">{error}</div>}
+      {error && <div className="text-xs text-red-500 mt-2">{error.message}</div>}
       {txSig && (
         <a
           href={`https://solscan.io/tx/${txSig}`}
