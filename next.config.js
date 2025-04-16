@@ -1,80 +1,37 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',  // Changed from 'standalone' to 'export' for static hosting
+  output: 'standalone',
   reactStrictMode: true,
-  poweredByHeader: false,
+  swcMinify: true,
   images: {
-    domains: ['solscan.io'], // Add any other domains you might be loading images from
-    unoptimized: true, // Required for static export
+    unoptimized: true,
+    domains: ['raw.githubusercontent.com'],
   },
-  // Ensure environment variables are available
   env: {
-    NEXT_PUBLIC_SOLANA_RPC_URL: process.env.NEXT_PUBLIC_SOLANA_RPC_URL || '',
-    NEXT_PUBLIC_JUPITER_API_URL: process.env.NEXT_PUBLIC_JUPITER_API_URL || '',
+    NEXT_PUBLIC_SOLANA_RPC_URL: process.env.NEXT_PUBLIC_SOLANA_RPC_URL,
+    NEXT_PUBLIC_JUPITER_API_URL: process.env.NEXT_PUBLIC_JUPITER_API_URL,
   },
   eslint: {
-    ignoreDuringBuilds: true, // Ignore ESLint errors during build
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true, // Also ignore TypeScript errors during build
+    ignoreBuildErrors: true,
   },
-  // Add trailing slashes for better compatibility
-  trailingSlash: true,
-  // Add webpack configuration to handle potential class inheritance issues
   webpack: (config, { isServer }) => {
-    // Add any necessary webpack configurations here
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      net: false,
-      tls: false,
-      crypto: false,
-      stream: false,
-      path: false,
-      os: false,
-      http: false,
-      https: false,
-      zlib: false,
-    };
-    
-    // Handle wallet adapter and module resolution
     if (!isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        '@solana/wallet-adapter-base': '@solana/wallet-adapter-base',
-        '@solana/wallet-adapter-react': '@solana/wallet-adapter-react',
-        '@solana/wallet-adapter-react-ui': '@solana/wallet-adapter-react-ui',
-        '@solana/wallet-adapter-wallets': '@solana/wallet-adapter-wallets',
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
       };
-
-      // Add module resolution rules
-      config.resolve.extensions = ['.js', '.jsx', '.ts', '.tsx', '.json', '.css'];
-      config.module.rules.push({
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      });
     }
-    
-    // Optimize the build
-    config.optimization = {
-      ...config.optimization,
-      minimize: true,
-      moduleIds: 'deterministic',
-      chunkIds: 'deterministic',
-    };
-    
     return config;
   },
-  // Add experimental features that might help with the build
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: [
-      '@solana/wallet-adapter-base',
-      '@solana/wallet-adapter-react',
-      '@solana/wallet-adapter-react-ui',
-      '@solana/wallet-adapter-wallets',
-    ],
+    scrollRestoration: true,
   },
-};
+}
 
-module.exports = nextConfig; 
+module.exports = nextConfig 
