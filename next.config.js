@@ -28,7 +28,26 @@ const nextConfig = {
       fs: false,
       net: false,
       tls: false,
+      crypto: false,
+      stream: false,
+      path: false,
+      os: false,
+      http: false,
+      https: false,
+      zlib: false,
     };
+    
+    // Handle wallet adapter
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@solana/wallet-adapter-base': '@solana/wallet-adapter-base/lib/cjs',
+        '@solana/wallet-adapter-react': '@solana/wallet-adapter-react/lib/cjs',
+        '@solana/wallet-adapter-react-ui': '@solana/wallet-adapter-react-ui/lib/cjs',
+        '@solana/wallet-adapter-wallets': '@solana/wallet-adapter-wallets/lib/cjs',
+      };
+    }
+    
     return config;
   },
 };
