@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
@@ -20,15 +21,15 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-4">
-            <a href="/" className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm">
+            <Link href="/" className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm">
               Home
-            </a>
-            <a href="/trending" className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm">
+            </Link>
+            <Link href="/trending" className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm">
               Trending
-            </a>
-            <a href="/legal" className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm">
+            </Link>
+            <Link href="/legal" className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm">
               Legal
-            </a>
+            </Link>
             <div className="ml-4">
               <WalletMultiButton className="!bg-blue-600 hover:!bg-blue-700" />
             </div>
@@ -57,24 +58,24 @@ export function Header() {
       {/* Mobile menu */}
       <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'}`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-zinc-900 border-b border-zinc-800">
-          <a
+          <Link
             href="/"
             className="text-zinc-300 hover:text-white block px-3 py-2 rounded-md text-base"
           >
             Home
-          </a>
-          <a
+          </Link>
+          <Link
             href="/trending"
             className="text-zinc-300 hover:text-white block px-3 py-2 rounded-md text-base"
           >
             Trending
-          </a>
-          <a
+          </Link>
+          <Link
             href="/legal"
             className="text-zinc-300 hover:text-white block px-3 py-2 rounded-md text-base"
           >
             Legal
-          </a>
+          </Link>
         </div>
       </div>
     </header>

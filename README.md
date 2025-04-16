@@ -118,6 +118,38 @@ yarn build
 
 ## Deployment
 
+### Vercel Deployment (Recommended)
+
+1. Push your code to GitHub:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git remote add origin your-github-repo-url
+   git push -u origin main
+   ```
+
+2. Visit [Vercel](https://vercel.com) and:
+   - Connect your GitHub repository
+   - Import the project
+   - Configure the following environment variables in Vercel's project settings:
+     ```
+     NEXT_PUBLIC_SOLANA_RPC_URL
+     NEXT_PUBLIC_JUPITER_API_URL
+     RATE_LIMIT_MAX_REQUESTS
+     RATE_LIMIT_WINDOW_MS
+     TX_CONFIRMATION_TIMEOUT_MS
+     MAX_RETRIES
+     PRIORITY_FEE_MULTIPLIER
+     ENABLE_PERFORMANCE_MONITORING
+     ENABLE_ERROR_TRACKING
+     ```
+   - Deploy the project
+
+3. Your app will be automatically deployed on push to the main branch.
+
+### Manual Deployment
+
 1. Build the application:
    ```bash
    npm run build

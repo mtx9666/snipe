@@ -10,7 +10,7 @@ interface QuotePreviewProps {
   slippage: string;
   tokenInfo?: TokenInfo;
   publicKey?: PublicKey;
-  onQuote?: (quote: any) => void;
+  onQuote?: (quote: JupiterQuote | null) => void;
 }
 
 interface JupiterQuote {
@@ -18,9 +18,34 @@ interface JupiterQuote {
   outAmount: string;
   priceImpactPct: number;
   otherAmountThreshold: string;
-  routePlan: any[];
+  routePlan: Array<{
+    swapInfo: {
+      ammKey: string;
+      label: string;
+      inputMint: string;
+      outputMint: string;
+      inAmount: string;
+      outAmount: string;
+      feeAmount: string;
+      feeMint: string;
+    };
+  }>;
   contextSlot: number;
-  marketInfos: any[];
+  marketInfos: Array<{
+    id: string;
+    label: string;
+    inputMint: string;
+    outputMint: string;
+    notEnoughLiquidity: boolean;
+    inAmount: string;
+    outAmount: string;
+    priceImpactPct: number;
+    lpFee: {
+      amount: string;
+      mint: string;
+      pct: number;
+    };
+  }>;
 }
 
 export function QuotePreview({ solAmount, tokenAddress, slippage, tokenInfo, publicKey, onQuote }: QuotePreviewProps) {
@@ -44,8 +69,9 @@ export function QuotePreview({ solAmount, tokenAddress, slippage, tokenInfo, pub
         if (!data || !data.outAmount) throw new Error('No quote available');
         setQuote(data);
         if (onQuote) onQuote(data);
-      } catch (e: any) {
-        setError(e.message || 'Error fetching quote');
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Error fetching quote';
+        setError(errorMessage);
         if (onQuote) onQuote(null);
       } finally {
         setLoading(false);
