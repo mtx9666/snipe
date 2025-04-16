@@ -1,11 +1,11 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  output: 'standalone',
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',  // Changed from 'standalone' to 'export' for static hosting
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
     domains: ['solscan.io'], // Add any other domains you might be loading images from
+    unoptimized: true, // Required for static export
   },
   // Ensure environment variables are available
   env: {
@@ -17,7 +17,9 @@ const nextConfig: NextConfig = {
   },
   typescript: {
     ignoreBuildErrors: true, // Also ignore TypeScript errors during build
-  }
+  },
+  // Add trailing slashes for better compatibility
+  trailingSlash: true,
 };
 
-export default nextConfig;
+module.exports = nextConfig; 
