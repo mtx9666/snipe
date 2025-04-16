@@ -1,5 +1,5 @@
 import React from 'react';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '../components/Header';
@@ -10,11 +10,8 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Solana Token Sniper',
-  description: 'Professional token sniping platform on Solana',
-  keywords: 'solana, token, sniper, trading, cryptocurrency, defi',
-  authors: [{ name: 'Solana Token Sniper Team' }],
-  viewport: 'width=device-width, initial-scale=1',
+  title: 'Solana Sniper',
+  description: 'A tool for sniping tokens on Solana',
 };
 
 export default function RootLayout({

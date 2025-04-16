@@ -1,21 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
-  reactStrictMode: true,
-  swcMinify: true,
+  output: 'export',
+  distDir: 'out',
   images: {
     unoptimized: true,
-    domains: ['raw.githubusercontent.com'],
   },
   env: {
     NEXT_PUBLIC_SOLANA_RPC_URL: process.env.NEXT_PUBLIC_SOLANA_RPC_URL,
     NEXT_PUBLIC_JUPITER_API_URL: process.env.NEXT_PUBLIC_JUPITER_API_URL,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -24,14 +16,17 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
+        crypto: require.resolve('crypto-browserify'),
+        stream: require.resolve('stream-browserify'),
+        path: require.resolve('path-browserify'),
+        zlib: require.resolve('browserify-zlib'),
       };
     }
     return config;
   },
-  experimental: {
-    optimizeCss: true,
-    scrollRestoration: true,
-  },
+  trailingSlash: true,
+  // Disable strict mode to avoid double rendering
+  reactStrictMode: false,
 }
 
 module.exports = nextConfig 

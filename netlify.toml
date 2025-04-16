@@ -1,6 +1,6 @@
 [build]
-  command = "npm install && npm run build"
-  publish = ".next"
+  command = "npm run build"
+  publish = "out"
 
 [build.environment]
   NEXT_TELEMETRY_DISABLED = "1"
@@ -10,13 +10,11 @@
   NEXT_PUBLIC_SOLANA_RPC_URL = "https://api.mainnet-beta.solana.com"
   NEXT_PUBLIC_JUPITER_API_URL = "https://quote-api.jup.ag/v6"
 
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true
 
 [build.processing]
   skip_processing = false
