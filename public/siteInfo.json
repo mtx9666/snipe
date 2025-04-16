@@ -1,0 +1,17 @@
+{
+  "id": "solana-sniper",
+  "name": "Solana Token Sniper",
+  "description": "Professional token sniping platform on Solana",
+  "version": "1.0.0",
+  "author": "Solana Token Sniper Team",
+  "repository": "https://github.com/mtx9666/snipe",
+  "license": "MIT",
+  "keywords": [
+    "solana",
+    "token",
+    "sniper",
+    "trading",
+    "cryptocurrency",
+    "defi"
+  ]
+} 
