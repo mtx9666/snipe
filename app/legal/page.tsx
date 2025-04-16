@@ -1,6 +1,10 @@
-'use client';
-
+import { Metadata } from 'next';
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'Legal Disclaimer - Solana Token Sniper',
+  description: 'Legal disclaimer and terms of use for Solana Token Sniper application.',
+};
 
 export default function LegalPage() {
   return (
