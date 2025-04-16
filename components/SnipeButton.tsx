@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey, Connection, Transaction } from '@solana/web3.js';
+import { PublicKey } from '@solana/web3.js';
 import type { TokenInfo } from '@solana/spl-token-registry';
+import { ArrowPathIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 interface SnipeButtonProps {
   tokenAddress: string;
@@ -19,7 +20,7 @@ interface TransactionError {
 }
 
 export function SnipeButton({ tokenAddress, solAmount, slippage, tokenInfo, disabled }: SnipeButtonProps) {
-  const { publicKey, signTransaction, sendTransaction, connected } = useWallet();
+  const { publicKey, signTransaction, connected } = useWallet();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<TransactionError | null>(null);
   const [txSig, setTxSig] = useState<string | null>(null);
@@ -46,28 +47,46 @@ export function SnipeButton({ tokenAddress, solAmount, slippage, tokenInfo, disa
   };
 
   return (
-    <div className="w-full flex flex-col items-center gap-2 mt-4">
+    <div className="glass-panel p-6">
       <button
-        className={`w-full px-4 py-2 rounded font-semibold text-white transition-colors ${
-          !connected || disabled || loading
-            ? 'bg-zinc-700 cursor-not-allowed'
-            : 'bg-blue-600 hover:bg-blue-700'
-        }`}
         onClick={handleSnipe}
         disabled={!connected || disabled || loading}
+        className={`w-full flex items-center justify-center gap-2 btn-primary ${
+          !connected || disabled || loading ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
       >
-        {loading ? 'Processing...' : connected ? 'Snipe Token' : 'Connect Wallet'}
+        {loading && <ArrowPathIcon className="h-5 w-5 animate-spin" />}
+        <span>
+          {loading ? 'Processing...' : connected ? 'Snipe Token' : 'Connect Wallet'}
+        </span>
       </button>
-      {error && <div className="text-xs text-red-500 mt-2">{error.message}</div>}
+
+      {error && (
+        <div className="mt-4 p-4 rounded-lg bg-red-500/10 border border-red-500/20">
+          <div className="flex items-start gap-2">
+            <ExclamationTriangleIcon className="h-5 w-5 text-red-500 flex-shrink-0" />
+            <div>
+              <div className="font-medium text-red-400">Transaction Failed</div>
+              <div className="text-sm text-red-300/70 mt-1">{error.message}</div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {txSig && (
-        <a
-          href={`https://solscan.io/tx/${txSig}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-green-400 underline mt-1"
-        >
-          View on Solscan
-        </a>
+        <div className="mt-4">
+          <a
+            href={`https://solscan.io/tx/${txSig}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
+          >
+            View on Solscan
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
       )}
     </div>
   );

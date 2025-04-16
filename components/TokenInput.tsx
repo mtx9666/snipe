@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { TokenListProvider, TokenInfo } from '@solana/spl-token-registry';
+import { CurrencyDollarIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 
 interface TokenInputProps {
   onChange: (data: {
@@ -69,49 +70,81 @@ export function TokenInput({ onChange }: TokenInputProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 bg-zinc-900 rounded-lg shadow max-w-md w-full mx-auto">
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-zinc-200">SPL Token Address</span>
-        <input
-          className="px-3 py-2 rounded bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          type="text"
-          value={tokenAddress}
-          onChange={e => setTokenAddress(e.target.value.trim())}
-          placeholder="Enter SPL token address"
-          autoComplete="off"
-        />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-zinc-200">SOL Amount</span>
-        <input
-          className="px-3 py-2 rounded bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          type="number"
-          min="0"
-          step="any"
-          value={solAmount}
-          onChange={e => setSolAmount(e.target.value.replace(/[^\d.]/g, ''))}
-          placeholder="Amount in SOL"
-        />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium text-zinc-200">Max Slippage (%)</span>
-        <input
-          className="px-3 py-2 rounded bg-zinc-800 text-white border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          type="number"
-          min="0.1"
-          max="50"
-          step="0.1"
-          value={slippage}
-          onChange={e => handleSlippage(e.target.value)}
-          placeholder="1"
-        />
-      </label>
-      {tokenInfo && (
-        <div className="text-xs text-green-400">
-          Token: {tokenInfo.name} ({tokenInfo.symbol})
+    <div className="glass-panel p-6 space-y-4">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+          <CurrencyDollarIcon className="h-5 w-5 text-blue-500" />
+          Token Details
+        </h2>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-zinc-300 mb-1">
+            SPL Token Address
+          </label>
+          <input
+            type="text"
+            value={tokenAddress}
+            onChange={e => setTokenAddress(e.target.value.trim())}
+            placeholder="Enter SPL token address"
+            className="input-field"
+            autoComplete="off"
+          />
         </div>
-      )}
-      {error && <div className="text-xs text-red-500">{error}</div>}
+
+        <div>
+          <label className="block text-sm font-medium text-zinc-300 mb-1">
+            SOL Amount
+          </label>
+          <input
+            type="number"
+            min="0"
+            step="any"
+            value={solAmount}
+            onChange={e => setSolAmount(e.target.value.replace(/[^\d.]/g, ''))}
+            placeholder="Amount in SOL"
+            className="input-field"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-zinc-300 mb-1">
+            Max Slippage (%)
+          </label>
+          <input
+            type="number"
+            min="0.1"
+            max="50"
+            step="0.1"
+            value={slippage}
+            onChange={e => handleSlippage(e.target.value)}
+            placeholder="1"
+            className="input-field"
+          />
+        </div>
+
+        {tokenInfo && (
+          <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+            <div className="font-medium text-green-400">
+              {tokenInfo.name} ({tokenInfo.symbol})
+            </div>
+            <div className="text-xs text-green-300/70 mt-1">
+              Verified token found in registry
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-start gap-2">
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500 flex-shrink-0" />
+            <div>
+              <div className="font-medium text-red-400">Invalid Token</div>
+              <div className="text-xs text-red-300/70 mt-1">{error}</div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 } 

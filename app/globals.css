@@ -13,13 +13,79 @@
   --background-end-rgb: 0, 0, 0;
 }
 
+/* Override Wallet Adapter styles */
+.wallet-adapter-button {
+  @apply !rounded-lg !font-medium !py-2 !px-4 !text-sm !transition-all !duration-200;
+  background-color: theme('colors.blue.600') !important;
+}
+
+.wallet-adapter-button:hover {
+  background-color: theme('colors.blue.700') !important;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+  background-color: theme('colors.blue.700') !important;
+}
+
+.wallet-adapter-modal-wrapper {
+  background-color: theme('colors.zinc.900') !important;
+}
+
+.wallet-adapter-modal-button-close {
+  background-color: theme('colors.zinc.800') !important;
+}
+
+.wallet-adapter-modal-title {
+  color: theme('colors.white') !important;
+}
+
+.wallet-adapter-modal-content {
+  color: theme('colors.zinc.400') !important;
+}
+
+.wallet-adapter-modal-list {
+  @apply !m-0;
+}
+
+.wallet-adapter-modal-list li {
+  @apply !mb-2;
+}
+
+.wallet-adapter-modal-list-more {
+  @apply !text-blue-500 hover:!text-blue-400;
+}
+
+/* Base styles */
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgb(var(--background-end-rgb))
-  )
-  rgb(var(--background-start-rgb));
-  min-height: 100vh;
+  @apply antialiased text-white bg-zinc-950;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.03), transparent 25%),
+    radial-gradient(circle at 0% 100%, rgba(168, 85, 247, 0.03), transparent 25%);
+}
+
+/* Custom component styles */
+.glass-panel {
+  @apply bg-zinc-900/50 backdrop-blur-xl border border-zinc-800/50 rounded-2xl;
+}
+
+.input-field {
+  @apply w-full px-4 py-2 bg-zinc-800/50 border border-zinc-700/50 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50;
+}
+
+.btn-primary {
+  @apply px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors duration-200;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-medium rounded-xl transition-colors duration-200;
+}
+
+/* Animation utilities */
+@keyframes pulse-blue {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse-blue {
+  animation: pulse-blue 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

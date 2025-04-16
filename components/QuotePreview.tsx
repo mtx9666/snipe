@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import type { TokenInfo } from '@solana/spl-token-registry';
+import { ArrowsRightLeftIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 interface QuotePreviewProps {
   solAmount: string;
@@ -59,6 +60,7 @@ export function QuotePreview({ solAmount, tokenAddress, slippage, tokenInfo, pub
     if (onQuote) onQuote(null);
     if (!solAmount || !tokenAddress || !tokenInfo || !publicKey) return;
     if (isNaN(Number(solAmount)) || Number(solAmount) <= 0) return;
+
     const fetchQuote = async () => {
       setLoading(true);
       try {
@@ -77,29 +79,92 @@ export function QuotePreview({ solAmount, tokenAddress, slippage, tokenInfo, pub
         setLoading(false);
       }
     };
-    fetchQuote();
+
+    const debounceTimer = setTimeout(fetchQuote, 500);
+    return () => clearTimeout(debounceTimer);
   }, [solAmount, tokenAddress, slippage, tokenInfo, publicKey, onQuote]);
 
-  if (!publicKey) return <div className="text-yellow-400 text-sm">Connect your wallet to preview swap.</div>;
-  if (!tokenInfo) return <div className="text-zinc-400 text-sm">Enter a valid SPL token address.</div>;
-  if (!solAmount || isNaN(Number(solAmount)) || Number(solAmount) <= 0) return <div className="text-zinc-400 text-sm">Enter a valid SOL amount.</div>;
+  if (!publicKey) {
+    return (
+      <div className="glass-panel p-6">
+        <div className="flex items-center gap-2 text-yellow-400">
+          <ExclamationTriangleIcon className="h-5 w-5" />
+          <span>Connect your wallet to preview swap</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!tokenInfo) {
+    return (
+      <div className="glass-panel p-6">
+        <div className="text-zinc-400">Enter a valid SPL token address</div>
+      </div>
+    );
+  }
+
+  if (!solAmount || isNaN(Number(solAmount)) || Number(solAmount) <= 0) {
+    return (
+      <div className="glass-panel p-6">
+        <div className="text-zinc-400">Enter a valid SOL amount</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="w-full bg-zinc-900 rounded-lg p-4 mt-2 flex flex-col gap-2">
-      {loading && <div className="text-blue-400 text-sm">Fetching quote...</div>}
-      {error && <div className="text-red-500 text-sm">{error}</div>}
-      {quote && (
-        <div className="flex flex-col gap-1">
-          <div className="text-green-400 text-lg font-semibold">
-            {Number(quote.outAmount) / Math.pow(10, tokenInfo.decimals)} {tokenInfo.symbol}
+    <div className="glass-panel p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+          <ArrowsRightLeftIcon className="h-5 w-5 text-blue-500" />
+          Swap Preview
+        </h2>
+        {loading && (
+          <div className="text-sm text-blue-400 animate-pulse-blue">
+            Fetching best route...
           </div>
-          <div className="text-xs text-zinc-400">
-            Expected output for {solAmount} SOL
-          </div>
-          <div className="text-xs text-zinc-400">
-            Price Impact: <span className={quote.priceImpactPct > 0.05 ? 'text-red-400' : 'text-green-400'}>{(quote.priceImpactPct * 100).toFixed(2)}%</span>
+        )}
+      </div>
+
+      {error ? (
+        <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20">
+          <div className="flex items-center gap-2">
+            <ExclamationTriangleIcon className="h-5 w-5 text-red-500" />
+            <span className="text-red-400">{error}</span>
           </div>
         </div>
+      ) : quote ? (
+        <div className="space-y-4">
+          <div className="p-4 rounded-lg bg-zinc-800/50 border border-zinc-700/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-sm text-zinc-400">You pay</div>
+                <div className="text-lg font-semibold text-white">{solAmount} SOL</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm text-zinc-400">You receive</div>
+                <div className="text-lg font-semibold text-green-400">
+                  {(Number(quote.outAmount) / Math.pow(10, tokenInfo.decimals)).toLocaleString(undefined, {
+                    maximumFractionDigits: 6,
+                  })} {tokenInfo.symbol}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-zinc-400">Price Impact</span>
+            <span className={quote.priceImpactPct > 0.05 ? 'text-red-400' : 'text-green-400'}>
+              {(quote.priceImpactPct * 100).toFixed(2)}%
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-zinc-400">Max Slippage</span>
+            <span className="text-zinc-300">{slippage}%</span>
+          </div>
+        </div>
+      ) : (
+        <div className="text-zinc-400">Loading quote...</div>
       )}
     </div>
   );
