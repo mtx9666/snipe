@@ -20,6 +20,17 @@ const nextConfig = {
   },
   // Add trailing slashes for better compatibility
   trailingSlash: true,
+  // Add webpack configuration to handle potential class inheritance issues
+  webpack: (config, { isServer }) => {
+    // Add any necessary webpack configurations here
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+    return config;
+  },
 };
 
 module.exports = nextConfig; 
