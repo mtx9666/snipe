@@ -72,39 +72,63 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col items-center justify-center p-4">
-      <TrendingTokens />
-      <TopGainers />
-      <main className="w-full max-w-xl flex flex-col gap-8 items-center mt-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-center mb-2">Solana Token Sniper</h1>
-        <p className="text-zinc-400 text-center mb-4 max-w-lg">
-          Enter an SPL token address, amount of SOL to swap, and your max slippage. Connect your Phantom wallet to snipe tokens instantly on Solana mainnet.
-        </p>
-        <TokenInput onChange={setTokenInput} />
-        <QuotePreview
-          solAmount={tokenInput.solAmount}
-          tokenAddress={tokenInput.tokenAddress}
-          slippage={tokenInput.slippage}
-          tokenInfo={tokenInput.tokenInfo}
-          publicKey={publicKey ?? undefined}
-          onQuote={handleQuote}
-        />
-        <SnipeButton
-          tokenAddress={tokenInput.tokenAddress}
-          solAmount={tokenInput.solAmount}
-          slippage={tokenInput.slippage}
-          tokenInfo={tokenInput.tokenInfo}
-          disabled={!tokenInput.valid || !quote}
-        />
-      </main>
-      <RecentSnipes />
-      <WalletSwaps />
-      <footer className="w-full text-center text-xs text-zinc-500 mt-12 mb-2">
-        <span>
-          Powered by Solana & Jupiter Aggregator. Not affiliated with Solana, Phantom, or Jupiter. <br />
-          <a href="/legal" className="underline hover:text-zinc-300">Disclaimer</a>
-        </span>
-      </footer>
+    <div className="min-h-screen pt-20 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 mb-4">
+            Solana Token Sniper
+          </h1>
+          <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+            Professional-grade token sniping platform. Execute trades with precision using advanced aggregation and real-time market data.
+          </p>
+        </div>
+
+        {/* Main Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Market Data Column */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-6 border border-zinc-800/50">
+              <TrendingTokens />
+            </div>
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-6 border border-zinc-800/50">
+              <TopGainers />
+            </div>
+          </div>
+
+          {/* Sniper Interface Column */}
+          <div className="lg:col-span-8 space-y-6">
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-6 border border-zinc-800/50">
+              <div className="max-w-xl mx-auto">
+                <TokenInput onChange={setTokenInput} />
+                <QuotePreview
+                  solAmount={tokenInput.solAmount}
+                  tokenAddress={tokenInput.tokenAddress}
+                  slippage={tokenInput.slippage}
+                  tokenInfo={tokenInput.tokenInfo}
+                  publicKey={publicKey ?? undefined}
+                  onQuote={handleQuote}
+                />
+                <SnipeButton
+                  tokenAddress={tokenInput.tokenAddress}
+                  solAmount={tokenInput.solAmount}
+                  slippage={tokenInput.slippage}
+                  tokenInfo={tokenInput.tokenInfo}
+                  disabled={!tokenInput.valid || !quote}
+                />
+              </div>
+            </div>
+
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-6 border border-zinc-800/50">
+              <RecentSnipes />
+            </div>
+
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-6 border border-zinc-800/50">
+              <WalletSwaps />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
