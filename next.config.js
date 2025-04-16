@@ -48,7 +48,25 @@ const nextConfig = {
       };
     }
     
+    // Optimize the build
+    config.optimization = {
+      ...config.optimization,
+      minimize: true,
+      moduleIds: 'deterministic',
+      chunkIds: 'deterministic',
+    };
+    
     return config;
+  },
+  // Add experimental features that might help with the build
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: [
+      '@solana/wallet-adapter-base',
+      '@solana/wallet-adapter-react',
+      '@solana/wallet-adapter-react-ui',
+      '@solana/wallet-adapter-wallets',
+    ],
   },
 };
 
