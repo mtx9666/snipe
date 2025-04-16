@@ -37,15 +37,22 @@ const nextConfig = {
       zlib: false,
     };
     
-    // Handle wallet adapter
+    // Handle wallet adapter and module resolution
     if (!isServer) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        '@solana/wallet-adapter-base': '@solana/wallet-adapter-base/lib/cjs',
-        '@solana/wallet-adapter-react': '@solana/wallet-adapter-react/lib/cjs',
-        '@solana/wallet-adapter-react-ui': '@solana/wallet-adapter-react-ui/lib/cjs',
-        '@solana/wallet-adapter-wallets': '@solana/wallet-adapter-wallets/lib/cjs',
+        '@solana/wallet-adapter-base': '@solana/wallet-adapter-base',
+        '@solana/wallet-adapter-react': '@solana/wallet-adapter-react',
+        '@solana/wallet-adapter-react-ui': '@solana/wallet-adapter-react-ui',
+        '@solana/wallet-adapter-wallets': '@solana/wallet-adapter-wallets',
       };
+
+      // Add module resolution rules
+      config.resolve.extensions = ['.js', '.jsx', '.ts', '.tsx', '.json', '.css'];
+      config.module.rules.push({
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      });
     }
     
     // Optimize the build
